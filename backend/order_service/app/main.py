@@ -1,4 +1,6 @@
 # week08/backend/order_service/app/main.py
+print("This is a test log in the order service.")
+
 
 import logging
 import os

@@ -1,4 +1,5 @@
 # week08/backend/product_service/tests/test_main.py
+print("This is a test log in the product service.")
 
 import logging
 import os
