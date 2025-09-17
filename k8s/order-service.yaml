@@ -18,7 +18,8 @@ spec:
     spec:
       containers:
       - name: order-service-container
-        image: durgeshsamariya.azurecr.io/order_service:latest
+        image: purva04.azurecr.io
+
         imagePullPolicy: Always
         ports:
         - containerPort: 8000
