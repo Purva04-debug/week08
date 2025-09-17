@@ -2,11 +2,11 @@ name: Backend CI - Test, Build, and Push Images to ACR
 
 on:
   workflow_dispatch:  # Manual trigger
-  push:  # Trigger when changes are pushed to main branch
+  push:  # Trigger when changes are pushed to the main branch
     branches:
       - main
     paths:
-      - 'backend/**'  # Only trigger if changes are in backend directory
+      - 'backend/**'  # Only trigger if changes are in the backend directory
       - '.github/workflows/backend_ci.yml'  # Trigger if this workflow file changes
 
 env:
