@@ -101,7 +101,7 @@ def test_read_root(client: TestClient):
     """Test the root endpoint."""
     response = client.get("/")
     assert response.status_code == 200
-    assert response.json() == {"message": "Welcome to the Order Service!"}
+    assert response.json() == {"message": "Welcome to the Orders Service!"}
 
 
 def test_health_check(client: TestClient):
