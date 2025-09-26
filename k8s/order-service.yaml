@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: order-service-container
-        image: purvaweek08.azurecr.io/order_service:886c9e08629858bc24840f40a218e9c63ebb018f-18033166547
+        image: purvaweek08.azurecr.io/order_service:latest
         imagePullPolicy: Always
         ports:
         - containerPort: 8000
