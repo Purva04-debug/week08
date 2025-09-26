@@ -1,5 +1,4 @@
 # week08/k8s/frontend.yaml
-
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -18,24 +17,21 @@ spec:
     spec:
       containers:
       - name: frontend-container
-        # Use exact image tag from ACR
         image: purvaweek08.azurecr.io/frontend:44df3020add35fef4a3dd9122441086d157832bd-18027781252
         imagePullPolicy: Always
         ports:
         - containerPort: 80
         env:
-        # Correct backend service URLs from your ConfigMap
-        - name: PRODUCT_SERVICE_URL
-          valueFrom:
-            configMapKeyRef:
-              name: ecomm-config-w08e1
-              key: PRODUCT_SERVICE_URL
         - name: ORDER_SERVICE_URL
           valueFrom:
             configMapKeyRef:
               name: ecomm-config-w08e1
               key: ORDER_SERVICE_URL
-
+        - name: PRODUCT_SERVICE_URL
+          valueFrom:
+            configMapKeyRef:
+              name: ecomm-config-w08e1
+              key: PRODUCT_SERVICE_URL
 ---
 apiVersion: v1
 kind: Service
