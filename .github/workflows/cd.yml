@@ -1,4 +1,4 @@
-name: Full CD - Deploy Backend & Frontend
+name: Full CD -Deploy Backend & Frontend
 
 on:
   workflow_dispatch:
