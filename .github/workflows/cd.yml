@@ -8,16 +8,13 @@ on:
     branches:
       - main
     paths:
-      - 'backend/**'
-      - 'frontend/**'
-      - '.github/workflows/cd.yml'
       - 'k8s/**'
+      - '.github/workflows/cd.yml'
 
 env:
   ACR_LOGIN_SERVER: purvaweek08.azurecr.io
-  IMAGE_TAG: ${{ github.sha }}-${{ github.run_id }}
-  RESOURCE_GROUP: deakin04
-  AKS_CLUSTER: sit722week08
+  AKS_RESOURCE_GROUP: deakin04
+  AKS_CLUSTER_NAME: sit722week08
 
 jobs:
   deploy:
@@ -32,23 +29,33 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - name: Get AKS credentials
-        run: az aks get-credentials --resource-group ${{ env.RESOURCE_GROUP }} --name ${{ env.AKS_CLUSTER }} --overwrite-existing
-
-      - name: Update Product Service Deployment
+      - name: Get AKS Credentials
         run: |
-          kubectl set image deployment/product-service product-service-container=${{ env.ACR_LOGIN_SERVER }}/product_service:${{ env.IMAGE_TAG }}
-          kubectl rollout status deployment/product-service --timeout=180s
+          az aks get-credentials \
+            --resource-group ${{ env.AKS_RESOURCE_GROUP }} \
+            --name ${{ env.AKS_CLUSTER_NAME }} \
+            --overwrite-existing
 
-      - name: Update Order Service Deployment
+      - name: Set Kubernetes context
+        run: kubectl config current-context
+
+      - name: Update Product Service Image
         run: |
-          kubectl set image deployment/order-service order-service-container=${{ env.ACR_LOGIN_SERVER }}/order_service:${{ env.IMAGE_TAG }}
-          kubectl rollout status deployment/order-service --timeout=180s
+          kubectl set image deployment/product-service-w08e1 \
+            product-service-container=purvaweek08.azurecr.io/product_service:44df3020add35fef4a3dd9122441086d157832bd-18027781252
 
-      - name: Update Frontend Deployment
+      - name: Update Order Service Image
         run: |
-          kubectl set image deployment/frontend frontend-container=${{ env.ACR_LOGIN_SERVER }}/frontend:${{ env.IMAGE_TAG }}
-          kubectl rollout status deployment/frontend --timeout=180s
+          kubectl set image deployment/order-service-w08e1 \
+            order-service-container=purvaweek08.azurecr.io/order_service:44df3020add35fef4a3dd9122441086d157832bd-18027781252
 
-      - name: Verify All Deployments
-        run: kubectl get deployments -o wide
+      - name: Update Frontend Image
+        run: |
+          kubectl set image deployment/frontend \
+            frontend-container=purvaweek08.azurecr.io/frontend:44df3020add35fef4a3dd9122441086d157832bd-18027781252
+
+      - name: Verify Deployments
+        run: |
+          kubectl rollout status deployment/product-service-w08e1
+          kubectl rollout status deployment/order-service-w08e1
+          kubectl rollout status deployment/frontend
