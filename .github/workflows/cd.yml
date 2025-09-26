@@ -1,4 +1,4 @@
-# .github/workflows/cd.yml
+#.github/workflows/cd.yml
 
 name: CD - Deploy to AKS
 
