@@ -1,9 +1,7 @@
-# week08/k8s/order-service.yaml
-
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: order-service-w08e1 # Deployment name matches
+  name: order-service-w08e1
   labels:
     app: order-service
 spec:
@@ -18,13 +16,16 @@ spec:
     spec:
       containers:
       - name: order-service-container
-        image: purvaweek08.azurecr.io/order_service:latest
+        image: purvaweek08.azurecr.io/order_service:44df3020add35fef4a3dd9122441086d157832bd-18027781252
         imagePullPolicy: Always
         ports:
         - containerPort: 8000
         env:
         - name: POSTGRES_HOST
-          value: order-db-service-w08e1
+          valueFrom:
+            configMapKeyRef:
+              name: ecomm-config-w08e1
+              key: ORDER_DB_HOST
         - name: POSTGRES_DB
           valueFrom:
             configMapKeyRef:
@@ -57,6 +58,6 @@ spec:
     app: order-service
   ports:
     - protocol: TCP
-      port: 8001
-      targetPort: 8000
+      port: 8000   # external cluster port
+      targetPort: 8000  # container port
   type: LoadBalancer
