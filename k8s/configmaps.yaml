@@ -1,21 +1,36 @@
+# week08/k8s/configmaps.yaml
 apiVersion: v1
 kind: ConfigMap
 metadata:
   name: ecomm-config-w08e1
 data:
+  # =====================
   # Database Names
-  PRODUCTS_DB_NAME: products
+  # =====================
   ORDERS_DB_NAME: orders
+  PRODUCTS_DB_NAME: products
 
+  # =====================
   # Database Hosts
+  # =====================
   ORDER_DB_HOST: order-db-service-w08e1
   ORDER_DB_PORT: "5432"
-  PRODUCT_DB_HOST: product-db-service-w08e1
-  PRODUCT_DB_PORT: "5432"
-
-  # Database credentials (if your DBs use these defaults)
   ORDER_DB_USER: postgres
   ORDER_DB_PASSWORD: postgres
+
+  PRODUCT_DB_HOST: product-db-service-w08e1
+  PRODUCT_DB_PORT: "5432"
   PRODUCT_DB_USER: postgres
   PRODUCT_DB_PASSWORD: postgres
 
+  # =====================
+  # Internal Service URLs
+  # =====================
+  PRODUCT_SERVICE_URL: http://product-service-w08e1:8000
+  ORDER_SERVICE_URL: http://order-service-w08e1:8001
+
+  # =====================
+  # Azure Storage Config
+  # =====================
+  AZURE_STORAGE_CONTAINER_NAME: product-images
+  AZURE_SAS_TOKEN_EXPIRY_HOURS: "1"
