@@ -18,12 +18,10 @@ spec:
     spec:
       containers:
       - name: frontend-container
-        image: purva04week08.azurecr.io/frontend:latest 
-
+        image: purvaweek08.azurecr.io/frontend:latest 
         imagePullPolicy: Always
         ports:
         - containerPort: 80
----
 apiVersion: v1
 kind: Service
 metadata:

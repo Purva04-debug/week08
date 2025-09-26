@@ -18,8 +18,7 @@ spec:
     spec:
       containers:
       - name: product-service-container
-        image: purva04week08.azurecr.io/product_service:latest
-
+        image: purvaweek08.azurecr.io/product_service:latest
         imagePullPolicy: Always
         ports:
         - containerPort: 8000
