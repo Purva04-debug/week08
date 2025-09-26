@@ -1,3 +1,5 @@
+# week08/k8s/frontend.yaml
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -16,7 +18,7 @@ spec:
     spec:
       containers:
       - name: frontend-container
-        image: purvaweek08.azurecr.io/frontend:latest 
+        image: purvaweek08.azurecr.io/frontend:latest
         imagePullPolicy: Always
         ports:
         - containerPort: 80
@@ -31,3 +33,19 @@ spec:
             configMapKeyRef:
               name: ecomm-config-w08e1
               key: ORDER_SERVICE_URL
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend-w08e1
+  labels:
+    app: frontend
+spec:
+  selector:
+    app: frontend
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+  type: LoadBalancer
