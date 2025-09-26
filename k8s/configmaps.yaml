@@ -18,3 +18,4 @@ data:
   ORDER_DB_PASSWORD: postgres
   PRODUCT_DB_USER: postgres
   PRODUCT_DB_PASSWORD: postgres
+
