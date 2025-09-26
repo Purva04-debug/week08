@@ -91,7 +91,7 @@ async def startup_event():
 # --- Root Endpoint ---
 @app.get("/", status_code=status.HTTP_200_OK, summary="Root endpoint")
 async def read_root():
-    return {"message": "Welcome to the Order Service!"}
+    return {"message": "Welcome to the Orders Service!"}
 
 
 # --- Health Check Endpoint ---
