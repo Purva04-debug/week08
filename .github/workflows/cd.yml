@@ -1,44 +1,54 @@
 # .github/workflows/cd.yml
-name: CD Workflow
+
+name: CD - Deploy to AKS
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
+    paths:
+      - 'backend/**'
+      - 'frontend/**'
+      - '.github/workflows/cd.yml'
+      - 'k8s/**'
+
+env:
+  ACR_LOGIN_SERVER: purvaweek08.azurecr.io
+  IMAGE_TAG: ${{ github.sha }}-${{ github.run_id }}
+  RESOURCE_GROUP: deakin04
+  AKS_CLUSTER: sit722week08
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-      # Checkout the repo
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
-      # Login to Azure using service principal stored in GitHub secrets
-      - name: Login to Azure
+      - name: Azure Login
         uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      # Set AKS context
-      - name: Set AKS context
+      - name: Get AKS credentials
+        run: az aks get-credentials --resource-group ${{ env.RESOURCE_GROUP }} --name ${{ env.AKS_CLUSTER }} --overwrite-existing
+
+      - name: Update Product Service Deployment
         run: |
-          az aks get-credentials --resource-group deakin04 --name sit722week08 --overwrite-existing
-          kubectl config current-context
+          kubectl set image deployment/product-service product-service-container=${{ env.ACR_LOGIN_SERVER }}/product_service:${{ env.IMAGE_TAG }}
+          kubectl rollout status deployment/product-service --timeout=180s
 
-      # Ensure ACR login (so AKS can pull images)
-      - name: Login to ACR
-        run: az acr login --name purvaweek08
-
-      # Deploy Kubernetes manifests
-      - name: Deploy to AKS
+      - name: Update Order Service Deployment
         run: |
-          kubectl apply -f k8s/
-          kubectl rollout status deployment/frontend
-          kubectl rollout status deployment/order-service
-          kubectl rollout status deployment/product-service
+          kubectl set image deployment/order-service order-service-container=${{ env.ACR_LOGIN_SERVER }}/order_service:${{ env.IMAGE_TAG }}
+          kubectl rollout status deployment/order-service --timeout=180s
 
-      # Optional: Verify services
-      - name: Get services
-        run: kubectl get svc
+      - name: Update Frontend Deployment
+        run: |
+          kubectl set image deployment/frontend frontend-container=${{ env.ACR_LOGIN_SERVER }}/frontend:${{ env.IMAGE_TAG }}
+          kubectl rollout status deployment/frontend --timeout=180s
+
+      - name: Verify All Deployments
+        run: kubectl get deployments -o wide
