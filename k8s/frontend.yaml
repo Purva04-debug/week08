@@ -3,7 +3,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: frontend
+  name: frontend-w08e1
   labels:
     app: frontend
 spec:
@@ -18,11 +18,13 @@ spec:
     spec:
       containers:
       - name: frontend-container
-        image: purvaweek08.azurecr.io/frontend:latest
+        # Use exact image tag from ACR
+        image: purvaweek08.azurecr.io/frontend:44df3020add35fef4a3dd9122441086d157832bd-18027781252
         imagePullPolicy: Always
         ports:
         - containerPort: 80
         env:
+        # Correct backend service URLs from your ConfigMap
         - name: PRODUCT_SERVICE_URL
           valueFrom:
             configMapKeyRef:
